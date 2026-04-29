@@ -1,12 +1,11 @@
 # Proyectos UX / UI
 
-Colección de prototipos y sitios: formulario PHP de demostración, galería **Museo Fragmentos** (Astro + Vue) y blog personal (Astro).
+Colección de prototipos y sitios: galería **Museo Fragmentos** (Astro + Vue) y blog personal (Astro). Si mantienes aparte un demo **login** en HTML/PHP, puedes añadir una carpeta `login/` en la raíz y documentarla aquí; no forma parte de este árbol por defecto.
 
 ## Estructura
 
 ```
 ux-design/
-├── login/                    # Registro HTML / CSS / PHP (requiere servidor PHP)
 ├── ia-arte/
 │   └── magical-moon/         # Galería Museo Fragmentos (Astro 5, Vue, Tailwind)
 ├── ia-astro/                 # Blog / portafolio (Astro, MDX, TypeScript)
@@ -19,7 +18,6 @@ ux-design/
 ## Requisitos
 
 - **Node.js** 18 o superior (proyectos Astro).
-- **PHP** opcional, solo para la carpeta `login/` (ver sección más abajo).
 
 ## Uso rápido por proyecto
 
@@ -44,19 +42,6 @@ npm run dev
 
 - Build: `npm run build` → `dist/`.
 - En `astro.config.mjs`, `site` está como `https://example.com`; cámbialo por tu dominio real antes de publicar (canonical, RSS, sitemap).
-
-### Login (`login/`)
-
-Formulario de demostración; el POST va a `guardar.php`.
-
-```bash
-cd login
-php -S localhost:8080
-```
-
-Abre `http://localhost:8080` (no uses `file://` si quieres que funcione el PHP).
-
-El archivo `usuarios.txt` (si se genera) está en `.gitignore` y no debe subirse.
 
 ## Publicar en GitHub
 
