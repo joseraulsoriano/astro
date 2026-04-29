@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RoomsList from '../components/rooms/RoomsList.vue';
+---
+
+<Layout title="Salas Virtuales - Museo Fragmentos">
+  <div class="min-h-screen bg-white pt-20">
+    <!-- Header -->
+    <section class="bg-gradient-to-b from-wine/5 to-white py-16 border-b border-gray-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            Salas Virtuales
+          </h1>
+          <p class="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8">
+            Recorre exposiciones temáticas organizadas en espacios virtuales 3D. 
+            Como visitar un museo físico desde cualquier lugar.
+          </p>
+          <a href="/subir-obra" class="btn-primary inline-flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Subir obra (demo)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Salas Destacadas -->
+    <section class="py-12">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-3xl font-bold text-gray-900">Salas Destacadas</h2>
+          <select class="filter-select">
+            <option>Todas</option>
+            <option>Arte Contemporáneo</option>
+            <option>Arte Clásico</option>
+            <option>Fotografía</option>
+          </select>
+        </div>
+
+        <RoomsList client:load />
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+.btn-primary {
+  @apply px-8 py-4 bg-wine text-white font-semibold rounded-lg shadow-lg hover:bg-wine-dark transition-colors;
+}
+
+.filter-select {
+  @apply px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:border-wine focus:outline-none;
+}
+</style>
+

@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ArtistsList from '../components/artists/ArtistsList.vue';
+---
+
+<Layout title="Artistas - Museo Fragmentos">
+  <div class="min-h-screen bg-white pt-20">
+    <!-- Header -->
+    <section class="bg-gradient-to-b from-wine/5 to-white py-16 border-b border-gray-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            Nuestros Artistas
+          </h1>
+          <p class="text-xl md:text-2xl text-gray-700 leading-relaxed">
+            Descubre a los artistas que forman parte de nuestra comunidad. 
+            Explora sus perfiles y colecciones completas.
+          </p>
+        </div>
+
+        <!-- Filtros Rápidos -->
+        <div class="max-w-4xl mx-auto mt-12">
+          <div class="flex flex-wrap justify-center gap-3">
+            <button class="filter-chip active">Todos</button>
+            <button class="filter-chip">Pintores</button>
+            <button class="filter-chip">Escultores</button>
+            <button class="filter-chip">Fotógrafos</button>
+            <button class="filter-chip">Artistas Digitales</button>
+            <button class="filter-chip">Museos</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid de Artistas -->
+    <section class="py-12">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+          <p class="text-gray-600">
+            <span class="font-semibold text-gray-900">120+</span> artistas registrados
+          </p>
+          <select class="filter-select">
+            <option>Ordenar por: Más populares</option>
+            <option>Ordenar por: A-Z</option>
+            <option>Ordenar por: Más obras</option>
+          </select>
+        </div>
+
+        <ArtistsList client:load />
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+.filter-chip {
+  @apply px-4 py-2 bg-white border border-gray-300 rounded-full text-gray-700 hover:border-wine hover:text-wine transition-colors;
+}
+
+.filter-chip.active {
+  @apply bg-wine text-white border-wine;
+}
+
+.filter-select {
+  @apply px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:border-wine focus:outline-none;
+}
+</style>
+

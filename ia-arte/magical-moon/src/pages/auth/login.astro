@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LoginForm from '../../components/auth/LoginForm.vue';
+---
+
+<Layout title="Iniciar Sesión - Museo Fragmentos">
+  <div class="min-h-screen bg-gradient-to-b from-white to-wine/5 pt-20 flex items-center justify-center py-12">
+    <div class="w-full max-w-md px-4">
+      <LoginForm client:load />
+    </div>
+  </div>
+</Layout>
+

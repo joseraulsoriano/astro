@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GalleryGrid from '../components/gallery/GalleryGrid.vue';
+import GalleryFilters from '../components/gallery/GalleryFilters.vue';
+import SearchBar from '../components/gallery/SearchBar.vue';
+---
+
+<Layout title="Galería - Museo Fragmentos | Explora Obras de Arte">
+  <div class="min-h-screen bg-white pt-20">
+    <!-- Header de la Galería -->
+    <section class="bg-gradient-to-b from-wine/5 to-white py-12 border-b border-gray-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Galería de Arte
+          </h1>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Explora miles de obras de arte. Todo completamente gratis, sin necesidad de registro.
+          </p>
+        </div>
+
+        <!-- Barra de Búsqueda -->
+        <div class="max-w-3xl mx-auto mb-8">
+          <SearchBar client:load />
+        </div>
+
+        <!-- Filtros -->
+        <div class="max-w-5xl mx-auto">
+          <GalleryFilters client:load @filters-changed="handleFiltersChange" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid de Obras -->
+    <section class="py-12">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <GalleryGrid client:load :filters="currentFilters" :viewMode="viewMode" />
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+import { ref } from 'vue';
+
+const viewMode = ref('grid');
+const currentFilters = ref({});
+
+const handleFiltersChange = (filters) => {
+  currentFilters.value = filters;
+  if (filters.viewMode) {
+    viewMode.value = filters.viewMode;
+  }
+};
+</script>
+

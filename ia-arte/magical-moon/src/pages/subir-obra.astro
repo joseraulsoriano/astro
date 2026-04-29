@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import UploadForm from '../components/upload/UploadForm.vue';
+---
+
+<Layout title="Subir Obra - Museo Fragmentos">
+  <div class="min-h-screen bg-gradient-to-b from-white to-wine/5 pt-20 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          Subir Nueva Obra
+        </h1>
+        <p class="text-xl text-gray-600">
+          Comparte tu arte con el mundo. Sube imágenes, PDFs o modelos 3D.
+        </p>
+      </div>
+
+      <!-- Formulario de Subida -->
+      <UploadForm client:load />
+    </div>
+  </div>
+</Layout>
+

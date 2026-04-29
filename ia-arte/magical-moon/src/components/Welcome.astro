@@ -1,0 +1,61 @@
+---
+import { ref } from "vue";
+import DescriptionCard from "../components/DescriptionCard.vue";
+import SnowAnimation from "../components/SnowAnimation.vue";
+
+const images = [
+  {
+    src: "/main.png",
+    alt: "Obra Principal",
+    title: "Descripción de la Obra Principal",
+    description:
+      "Esta es la descripción de la obra principal. Aquí va un texto de ejemplo.",
+  },
+  {
+    src: "/1.png",
+    alt: "Obra Secundaria 1",
+    title: "Descripción de la Obra Secundaria 1",
+    description: "Aquí va la descripción de la obra secundaria 1.",
+  },
+  {
+    src: "/2.png",
+    alt: "Obra Secundaria 2",
+    title: "Descripción de la Obra Secundaria 2",
+    description: "Aquí va la descripción de la obra secundaria 2.",
+  },
+];
+
+const selectedImage = ref(null);
+---
+
+<html>
+  <head>
+    <title>Galería de Obras</title>
+  </head>
+  <body class="bg-gray-900 text-white">
+    <div id="app" class="p-4">
+      <SnowAnimation />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div
+          v-for="(image, index) in images"
+          :key="index"
+          class="cursor-pointer"
+          @click="selectedImage.value = image"
+        >
+          <img
+            :src="image.src"
+            :alt="image.alt"
+            class="w-full object-contain"
+          />
+        </div>
+      </div>
+
+      <DescriptionCard
+        v-if="selectedImage.value"
+        :title="selectedImage.value.title"
+        :description="selectedImage.value.description"
+        @close="selectedImage.value = null"
+      />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import RoomViewer from '../../components/rooms/RoomViewer.vue';
+
+export async function getStaticPaths() {
+  return ['1', '2', '3'].map((id) => ({ params: { id } }));
+}
+
+const { id } = Astro.params;
+---
+
+<Layout title="Sala Virtual - Museo Fragmentos">
+  <RoomViewer client:load :room-id="id" />
+</Layout>
+

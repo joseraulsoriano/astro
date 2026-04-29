@@ -1,0 +1,195 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="home">
+      <section class="home-hero" aria-labelledby="home-title">
+        <p class="home-eyebrow">Hola</p>
+        <h1 id="home-title">Bienvenido</h1>
+        <p class="home-lead">
+          Soy José Raúl, estudiante de Ingeniería en Tecnologías de la Información
+          en la Benemérita Universidad Autónoma de Puebla (BUAP), apasionado por la
+          tecnología, el desarrollo de software y la innovación digital. Esta web
+          recopila mi trayectoria, proyectos y escritos.
+        </p>
+        <div class="home-actions">
+          <a class="home-btn home-btn--primary" href="/blog/">Ver el blog</a>
+          <a class="home-btn home-btn--ghost" href="/about/">Sobre mí</a>
+        </div>
+      </section>
+
+      <section class="home-section" aria-labelledby="dev-heading">
+        <h2 id="dev-heading">Desarrollo tecnológico</h2>
+        <ul class="home-list">
+          <li>
+            <strong>Blog of Chasse:</strong> divulgación, aprendizajes y
+            experiencias tecnológicas.
+          </li>
+          <li>
+            <strong>Lobo Bus App:</strong> aplicación con POO y estructuras de
+            datos para movilidad en la universidad.
+          </li>
+          <li>
+            <strong>HTML5 y API de Google:</strong> solución con integración de
+            pagos y almacenamiento en archivos.
+          </li>
+          <li>
+            <strong>Agenda en XAMPP y PHP:</strong> gestión de contactos con base
+            de datos local.
+          </li>
+        </ul>
+      </section>
+
+      <section class="home-section" aria-labelledby="hack-heading">
+        <h2 id="hack-heading">Hackathones y competencias</h2>
+        <ul class="home-list">
+          <li>
+            <strong>Lobo Hack – Finalista:</strong> desarrollo web y diseño UX
+            con Figma.
+          </li>
+          <li>
+            <strong>Hack Morelos (Tec de Monterrey):</strong> exploración de
+            React y trabajo bajo presión.
+          </li>
+          <li>
+            <strong>Hack MTY:</strong> presentación de proyectos y colaboración
+            interdisciplinaria.
+          </li>
+          <li><strong>Hack Meta:</strong> por detallar.</li>
+        </ul>
+      </section>
+
+      <section class="home-section" aria-labelledby="outreach-heading">
+        <h2 id="outreach-heading">Divulgación y contenido</h2>
+        <ul class="home-list">
+          <li>
+            <strong>YouTube:</strong> tecnología, innovación y adopción digital.
+          </li>
+          <li>
+            <strong>Apple Books:</strong> proyecto de escritura con
+            ilustraciones asistidas por IA.
+          </li>
+        </ul>
+      </section>
+
+      <section class="home-section home-section--closing" aria-labelledby="focus-heading">
+        <h2 id="focus-heading">Enfoque profesional</h2>
+        <p>
+          Mi objetivo es seguir explorando el impacto de la tecnología en
+          distintos sectores, desarrollar soluciones útiles y compartir
+          conocimiento. Este sitio es una muestra de ese camino.
+        </p>
+        <p>
+          Sitio web adicional:
+          <a href="https://blogofchasee.netlify.app" target="_blank" rel="noopener noreferrer"
+            ><strong>Blog of Chasse</strong></a
+          >.
+        </p>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .home {
+    padding-top: 0.5rem;
+  }
+
+  .home-hero {
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgb(var(--gray-light));
+  }
+
+  .home-eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--gray));
+  }
+
+  .home-lead {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    max-width: 42rem;
+  }
+
+  .home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1.15rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .home-btn--primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: var(--box-shadow);
+  }
+
+  .home-btn--primary:hover {
+    background: var(--accent-dark);
+    color: white;
+  }
+
+  .home-btn--ghost {
+    background: white;
+    color: rgb(var(--gray-dark));
+    border: 1px solid rgb(var(--gray-light));
+  }
+
+  .home-btn--ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .home-section {
+    margin-bottom: 2.25rem;
+  }
+
+  .home-section h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.65rem;
+  }
+
+  .home-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    max-width: 42rem;
+  }
+
+  .home-list li {
+    margin-bottom: 0.65rem;
+  }
+
+  .home-section--closing p:last-child {
+    margin-bottom: 0;
+  }
+</style>

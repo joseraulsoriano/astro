@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ArtworkDetail from '../../components/artwork/ArtworkDetail.vue';
+
+export async function getStaticPaths() {
+  const fromGallery = [
+    'noche-estrellada',
+    'obra-digital',
+    'abstraccion',
+    ...Array.from({ length: 20 }, (_, i) => `obra-${i + 4}`),
+  ];
+  const extra = ['mi-primera-obra', 'obra-en-proceso', 'girasoles', 'autorretrato'];
+  const slugs = [...new Set([...fromGallery, ...extra])];
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<Layout title="Obra - Museo Fragmentos">
+  <ArtworkDetail client:load :slug="slug" />
+</Layout>
+
