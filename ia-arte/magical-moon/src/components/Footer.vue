@@ -46,9 +46,6 @@
       <div class="border-t border-slate-200 pt-8">
         <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p class="text-center text-sm text-slate-600 md:text-left">© {{ currentYear }} Museo Fragmentos.</p>
-          <p class="text-sm text-slate-600">
-            Desarrollo apoyado por <span class="font-semibold text-wine">Basil Soluciones</span>
-          </p>
         </div>
       </div>
     </div>

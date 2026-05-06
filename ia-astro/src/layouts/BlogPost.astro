@@ -5,18 +5,34 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import LinkedImage from "../components/LinkedImage.astro";
+import { DEFAULT_OG_IMAGE } from "../consts";
 
 type Props = CollectionEntry<"blog">["data"] & {
+  postUrl?: string;
   repoLink?: string;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, repoLink } =
-  Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  repoLink,
+  postUrl,
+} = Astro.props as Props;
+
+const heroHref = repoLink ?? postUrl ?? undefined;
 ---
 
 <html lang="es">
   <head>
-    <BaseHead title={title} description={description} repoLink={repoLink} />
+    <BaseHead
+      title={title}
+      description={description}
+      image={heroImage ?? DEFAULT_OG_IMAGE}
+      repoLink={repoLink}
+    />
     <style>
       main {
         width: calc(100% - 2em);
@@ -65,7 +81,12 @@ const { title, description, pubDate, updatedDate, heroImage, repoLink } =
         <div class="hero-image">
           {
             heroImage && (
-              <LinkedImage href={repoLink} src={heroImage} alt={title} />
+              <LinkedImage
+                href={heroHref}
+                src={heroImage}
+                alt={title}
+                loading="eager"
+              />
             )
           }
         </div>

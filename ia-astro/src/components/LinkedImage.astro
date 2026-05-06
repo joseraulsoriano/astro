@@ -1,7 +1,36 @@
 ---
-const { href, src, alt } = Astro.props;
+const { href, src, alt, loading } = Astro.props as {
+  href?: string | undefined;
+  src: string;
+  alt: string;
+  loading?: "lazy" | "eager" | undefined;
+};
+
+const remote =
+  typeof src === "string" &&
+  (src.startsWith("http://") || src.startsWith("https://"));
+const resolvedLoading =
+  loading ?? (remote ? ("lazy" as const) : undefined);
 ---
 
-<a href={href}>
-  <img src={src} alt={alt} />
-</a>
+{
+  href ? (
+    <a href={href}>
+      <img
+        src={src}
+        alt={alt}
+        decoding="async"
+        loading={resolvedLoading}
+        referrerpolicy={remote ? "no-referrer" : undefined}
+      />
+    </a>
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      decoding="async"
+      loading={resolvedLoading}
+      referrerpolicy={remote ? "no-referrer" : undefined}
+    />
+  )
+}

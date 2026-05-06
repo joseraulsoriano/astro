@@ -6,15 +6,10 @@
         
         <div class="bg-wine/5 border border-wine/20 rounded-2xl p-8 text-center">
           <div class="mb-6">
-            <h3 class="text-3xl font-bold text-wine mb-2">Basil Soluciones</h3>
             <p class="text-gray-700 text-lg">
               Desarrollando soluciones tecnológicas innovadoras para el futuro del arte digital
             </p>
           </div>
-          <p class="text-gray-600">
-            Museo Fragmentos cuenta con el respaldo técnico y el apoyo de Basil Soluciones, 
-            una empresa comprometida con la innovación tecnológica y la democratización del arte.
-          </p>
         </div>
 
         <!-- Información Adicional -->

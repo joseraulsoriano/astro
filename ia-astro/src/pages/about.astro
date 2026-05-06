@@ -6,20 +6,39 @@ import Layout from "../layouts/BlogPost.astro";
   title="Sobre mí"
   description="Trayectoria, intereses y enfoque profesional en desarrollo y tecnología."
   pubDate={new Date("December 25 2004")}
-  heroImage="/perfil.jpeg"
 >
   <div id="about-me">
     <h2>¿Quién soy?</h2>
+    <p>
+      Soy José Raúl Soriano Cazabal, estudiante de ingeniería en tecnologías de la información y
+      desarrollador en formación constante. Me mueven los proyectos con impacto real, el trabajo en
+      equipo en hackathones y divulgar lo que voy aprendiendo para que otros puedan aplicarlo.
+    </p>
+    <ul>
+      <li>
+        <strong>Formación:</strong> BUAP · enfoque en desarrollo de software y bases sólidas de
+        computación.
+      </li>
+      <li>
+        <strong>Lo que más disfruto:</strong> UX ligera en interfaces web y móviles, integración
+        de APIs y experimentar con herramientas que aceleran el aprendizaje.
+      </li>
+      <li>
+        <strong>Contacto rápido:</strong> puedes seguir el hilo de proyectos y código en
+        <a href="https://github.com/joseraulsoriano" target="_blank" rel="noopener noreferrer">GitHub</a>
+        (enlace en la cabecera del sitio).
+      </li>
+    </ul>
   </div>
+
   <p>
-    Soy un programador apasionado por el aprendizaje autodidacta. Cada línea de
-    código que escribo refleja creatividad, experiencia y ganas de innovar. Mi
-    formación no viene solo del aula: hackathones, proyectos propios y
-    certificaciones han sido parte clave de mi crecimiento.
+    Programar, para mí, es una forma de ordenar problemas, prototipar ideas y compartir soluciones.
+    Este sitio agrupa mi blog, referencias de proyectos y un poco de quién hay detrás del teclado.
   </p>
+
   <p>
-    Para mí, programar es una forma de pensar, resolver problemas y materializar
-    ideas.
+    Este video resume una presentación corta en canal; si prefieres texto, el resto del sitio cubre
+    la misma historia con más detalle.
   </p>
 
   <iframe
@@ -28,6 +47,7 @@ import Layout from "../layouts/BlogPost.astro";
     src="https://www.youtube.com/embed/DBvCYtUvXm4?si=FFzNB5U1bfNy-DxK&controls=0"
     title="Video de presentación en YouTube"
     style="max-width: 100%; border: 0; border-radius: 12px"
+    loading="lazy"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
     allowfullscreen></iframe>

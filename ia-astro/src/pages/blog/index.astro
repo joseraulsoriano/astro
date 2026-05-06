@@ -8,7 +8,7 @@ import FormattedDate from "../../components/FormattedDate.astro";
 import LanguageIcon from "../../components/LanguageIcon.astro";
 import LinkedImage from "../../components/LinkedImage.astro";
 
-const posts = (await getCollection("blog")).sort(
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
@@ -121,11 +121,14 @@ const pageTitle = `Blog · ${SITE_TITLE}`;
             posts.map((post) => (
               <li>
                 <a href={`/blog/${post.id}/`}>
+                  {post.data.heroImage ? (
                   <LinkedImage
-                    href={`/blog/${post.id}/`}
                     src={post.data.heroImage}
                     alt={post.data.title}
                   />
+                  ) : (
+                    null
+                  )}
                   <h4 class="title">
                     {post.data.title}
                     <LanguageIcon languages={post.data.languages} />

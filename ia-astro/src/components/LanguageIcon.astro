@@ -1,7 +1,7 @@
 ---
 const { languages } = Astro.props;
 
-const icons: { [key: string]: string } = {
+const icons: Record<string, string> = {
   javascript: "/icons/javascript.svg",
   python: "/icons/python.svg",
   swift: "/icons/swift.svg",
@@ -15,30 +15,41 @@ const icons: { [key: string]: string } = {
   cplus: "/icons/cplus.svg",
   bootstrap: "/icons/bootstrap.svg",
   markdown: "/icons/markdown.svg",
-  // Agrega más lenguajes e íconos según sea necesario
 };
 
 const iconSrcs = languages
   ? languages.map(
-      (lang: string) => icons[lang.toLowerCase()] || "/icons/default-icon.svg"
+      (lang: string) => icons[lang.toLowerCase()] || "/icons/default-icon.svg",
     )
   : ["/icons/default-icon.svg"];
 ---
 
-{
-  iconSrcs.map((iconSrc: string, index: number) => (
-    <img
-      src={iconSrc}
-      alt={languages ? languages.join(", ") : "default"}
-      width="24"
-      height="24"
-      class="icon"
-    />
-  ))
-}
+<span class="language-icons">
+  {
+    iconSrcs.map((iconSrc: string) => (
+      <img
+        src={iconSrc}
+        alt=""
+        role="presentation"
+        width="24"
+        height="24"
+        class="language-icons__icon"
+      />
+    ))
+  }
+</span>
 
 <style>
-  .icon {
-    margin-right: 234px;
+  .language-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+  }
+
+  .language-icons__icon {
+    flex-shrink: 0;
+    display: block;
   }
 </style>

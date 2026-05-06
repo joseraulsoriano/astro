@@ -27,12 +27,7 @@
               </svg>
             </div>
             <h2 class="section-title">Cómo Lo Hacemos</h2>
-            <p class="section-text">
-              A través de una plataforma digital gratuita donde cada fragmento de arte -ya sea una obra, 
-              un título, un artista o un museo completo- puede ser compartido por personas que quieren 
-              difundir la cultura. Todo esto es posible gracias al apoyo de <strong>Basil Soluciones</strong>, 
-              empresa que desarrolla soluciones tecnológicas innovadoras.
-            </p>
+        
           </div>
         </div>
       </div>
