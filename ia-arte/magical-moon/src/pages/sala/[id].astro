@@ -7,9 +7,10 @@ export async function getStaticPaths() {
 }
 
 const { id } = Astro.params;
+const pageTitle = `Sala virtual ${id} — Museo Fragmentos`;
+const pageDescription = `Recorre esta sala virtual en Museo Fragmentos: exposiciones en 3D y obras destacadas en el museo digital.`;
 ---
 
-<Layout title="Sala Virtual - Museo Fragmentos">
-  <RoomViewer client:load :room-id="id" />
+<Layout title={pageTitle} description={pageDescription}>
+  <RoomViewer client:load roomId={id} />
 </Layout>
-

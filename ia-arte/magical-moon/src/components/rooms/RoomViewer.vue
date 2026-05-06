@@ -174,6 +174,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { buildDemoGallery, buildDemoRooms, portraitAt } from '../../data/museumCollection';
 // TODO: Importar Three.js cuando esté instalado
 // import * as THREE from 'three';
 
@@ -197,30 +198,38 @@ const selectedArtwork = computed(() => {
 
 const fetchRoom = async () => {
   loading.value = true;
-  // TODO: Obtener desde Supabase
   setTimeout(() => {
+    const roomsMeta = buildDemoRooms();
+    const meta = roomsMeta.find((r) => String(r.id) === String(props.roomId)) || roomsMeta[0];
+    const palette = buildDemoGallery();
+    const spread = (parseInt(props.roomId, 10) || 1) * 2;
+
     room.value = {
       id: props.roomId,
-      name: 'Arte Contemporáneo 2024',
-      description: 'Colección de las mejores obras contemporáneas del año',
-      artworkCount: 8,
-      creator: 'Museo de Arte Moderno',
-      creatorId: '1',
-      creatorAvatar: '/main.png',
-      theme: 'moderno',
-      createdAt: '2024-01-15'
+      name: meta.name,
+      description: meta.description,
+      artworkCount: meta.artworkCount,
+      creator: meta.creator,
+      creatorId: '3',
+      creatorAvatar: portraitAt(spread + 2),
+      theme: meta.theme,
+      createdAt: '2024-01-15',
     };
 
-    artworks.value = [
-      { id: 1, title: 'Obra 1', artist: 'Artista 1', year: 2024, image: '/main.png', slug: 'obra-1' },
-      { id: 2, title: 'Obra 2', artist: 'Artista 2', year: 2023, image: '/1.png', slug: 'obra-2' },
-      { id: 3, title: 'Obra 3', artist: 'Artista 3', year: 2024, image: '/2.png', slug: 'obra-3' },
-      { id: 4, title: 'Obra 4', artist: 'Artista 4', year: 2023, image: '/main.png', slug: 'obra-4' },
-      { id: 5, title: 'Obra 5', artist: 'Artista 5', year: 2024, image: '/1.png', slug: 'obra-5' }
-    ];
+    artworks.value = [0, 1, 2, 3, 4].map((j) => {
+      const p = palette[(spread + j) % palette.length];
+      return {
+        id: p.id,
+        title: p.title,
+        artist: p.artist,
+        year: p.year,
+        image: p.image,
+        slug: p.slug,
+      };
+    });
 
     loading.value = false;
-  }, 1000);
+  }, 550);
 };
 
 const selectArtwork = (artwork, index) => {

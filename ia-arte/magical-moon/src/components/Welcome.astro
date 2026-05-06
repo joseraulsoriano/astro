@@ -1,27 +1,27 @@
 ---
-import { ref } from "vue";
-import DescriptionCard from "../components/DescriptionCard.vue";
-import SnowAnimation from "../components/SnowAnimation.vue";
+import { ref } from 'vue';
+import DescriptionCard from './DescriptionCard.vue';
+import SnowAnimation from './SnowAnimation.vue';
+import { coverAt } from '../data/museumCollection';
 
 const images = [
   {
-    src: "/main.png",
-    alt: "Obra Principal",
-    title: "Descripción de la Obra Principal",
-    description:
-      "Esta es la descripción de la obra principal. Aquí va un texto de ejemplo.",
+    src: coverAt(0),
+    alt: 'Noche estrellada (referencia histórica)',
+    title: 'Cielo sobre el pueblo',
+    description: 'Primera pieza de una tríada curada: constelación ficticia y trazo real.',
   },
   {
-    src: "/1.png",
-    alt: "Obra Secundaria 1",
-    title: "Descripción de la Obra Secundaria 1",
-    description: "Aquí va la descripción de la obra secundaria 1.",
+    src: coverAt(13),
+    alt: 'Interior de galería contemporánea',
+    title: 'Pasillo de luz',
+    description: 'Contraste entre volumen arquitectónico y la quietud de los marcos.',
   },
   {
-    src: "/2.png",
-    alt: "Obra Secundaria 2",
-    title: "Descripción de la Obra Secundaria 2",
-    description: "Aquí va la descripción de la obra secundaria 2.",
+    src: coverAt(27),
+    alt: 'Detalle de obra abstracta',
+    title: 'Temperatura del color',
+    description: 'Estudio de superficie donde el accidente químico del pigmento manda.',
   },
 ];
 

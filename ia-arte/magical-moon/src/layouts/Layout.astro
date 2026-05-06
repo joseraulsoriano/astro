@@ -6,9 +6,41 @@ import SnowAnimation from '../components/SnowAnimation.vue';
 interface Props {
   title?: string;
   description?: string;
+  /** Ruta bajo el sitio (ej. `/img/cartel.png`) o URL absoluta para Open Graph */
+  image?: string;
+  /** Páginas no listadas (borradores, entornos de prueba) */
+  noindex?: boolean;
 }
 
-const { title = 'Museo Fragmentos - Museo Digital de Arte', description = 'Museo digital donde cada obra, título, artista o museo son fragmentos compartidos por personas que quieren difundir el arte' } = Astro.props;
+const {
+  title = 'Museo Fragmentos - Museo Digital de Arte',
+  description = 'Museo digital donde cada obra, título, artista o museo son fragmentos compartidos por personas que quieren difundir el arte',
+  image,
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonicalURL = new URL(Astro.url.pathname, site);
+
+function resolveOgImage(src: string): string {
+  if (src.startsWith('http://') || src.startsWith('https://')) return src;
+  const path = src.startsWith('/') ? src : `/${src}`;
+  return new URL(path, site).href;
+}
+
+const ogImageUrl = image ? resolveOgImage(image) : resolveOgImage('/og-default.png');
+
+const siteOrigin = Astro.site?.origin ?? Astro.url.origin;
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Museo Fragmentos',
+  alternateName: 'Museo Digital de Arte',
+  description,
+  url: siteOrigin,
+  inLanguage: 'es-ES',
+});
 ---
 
 <!doctype html>
@@ -17,47 +49,62 @@ const { title = 'Museo Fragmentos - Museo Digital de Arte', description = 'Museo
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,475&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
-    
-    <!-- Open Graph / Facebook -->
+    <link rel="canonical" href={canonicalURL.href} />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    
-    <!-- Twitter -->
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" set:html={jsonLd} />
   </head>
-  <body class="bg-white text-gray-900 font-sans antialiased">
-    <!-- Snow Animation Background -->
+  <body class="bg-[#f4f7fa] text-slate-900 font-sans antialiased">
+    <a
+      href="#contenido-principal"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-wine focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-wine focus:ring-offset-2"
+      >Saltar al contenido principal</a>
     <SnowAnimation client:load />
-    
-    <!-- Navbar -->
     <Navbar client:load />
-    
-    <!-- Main Content -->
-    <main class="min-h-screen pt-16 md:pt-20">
+    <main id="contenido-principal" class="min-h-screen pt-16 md:pt-20">
       <slot />
     </main>
-    
-    <!-- Footer -->
     <Footer client:load />
   </body>
 </html>
 
 <style is:global>
   :root {
-    --color-primary: #FFFFFF;
-    --color-primary-dark: #F5F5F5;
-    --color-primary-light: #FAFAFA;
-    --color-secondary: #722F37;
-    --color-accent: #F5E6D3;
-    --color-wine: #722F37;
+    --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Source Sans 3', system-ui, sans-serif;
+    --museum-parchment: #eef2f6;
+    --color-primary: #ffffff;
+    --color-primary-dark: #f4f7fa;
+    --color-primary-light: #fafbfd;
+    --color-secondary: #3d6a8c;
+    --color-accent: #c8dfea;
+    --color-wine: #3d6a8c;
     --color-dark: #1a1a1a;
-    --color-bg: #FFFFFF;
+    --color-bg: #f4f7fa;
   }
 
   * {
@@ -70,10 +117,17 @@ const { title = 'Museo Fragmentos - Museo Digital de Arte', description = 'Museo
     scroll-behavior: smooth;
   }
 
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+  }
+
   body {
-    background-color: #FFFFFF;
-    color: #1f2937;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f4f7fa;
+    color: #1e293b;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

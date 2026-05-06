@@ -1,10 +1,12 @@
 <template>
   <div class="gallery-container">
     <!-- Estadísticas -->
-    <div class="mb-6 flex items-center justify-between">
-      <p class="text-gray-600">
-        Mostrando <span class="font-semibold text-gray-900">{{ filteredArtworks.length }}</span> de 
-        <span class="font-semibold text-gray-900">{{ totalArtworks }}</span> obras
+    <div class="mb-8 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-[15px] text-gray-600">
+        Mostrando
+        <span class="font-semibold text-gray-900">{{ filteredArtworks.length }}</span>
+        piezas seleccionadas de
+        <span class="font-semibold text-gray-900">{{ totalArtworks }}</span>
       </p>
     </div>
 
@@ -72,6 +74,7 @@
 import { ref, computed, onMounted } from 'vue';
 import ArtworkCard from './ArtworkCard.vue';
 import ArtworkListItem from './ArtworkListItem.vue';
+import { buildDemoGallery } from '../../data/museumCollection';
 
 const props = defineProps({
   filters: {
@@ -133,64 +136,13 @@ const viewArtwork = (artwork) => {
 };
 
 onMounted(() => {
-  // TODO: Cargar obras desde API
-  artworks.value = [
-    {
-      id: 1,
-      title: 'Noche Estrellada',
-      artist: 'Vincent van Gogh',
-      category: 'Pintura',
-      year: 1889,
-      image: '/main.png',
-      likes: 1250,
-      views: 5400,
-      slug: 'noche-estrellada',
-      created_at: '2024-01-15'
-    },
-    {
-      id: 2,
-      title: 'Obra Digital',
-      artist: 'Artista Contemporáneo',
-      category: 'Digital',
-      year: 2024,
-      image: '/1.png',
-      likes: 890,
-      views: 3200,
-      slug: 'obra-digital',
-      created_at: '2024-01-20'
-    },
-    {
-      id: 3,
-      title: 'Abstracción',
-      artist: 'Artista Moderno',
-      category: 'Abstracto',
-      year: 2023,
-      image: '/2.png',
-      likes: 654,
-      views: 2100,
-      slug: 'abstraccion',
-      created_at: '2024-01-10'
-    },
-    // Agregar más obras de ejemplo...
-    ...Array.from({ length: 20 }, (_, i) => ({
-      id: i + 4,
-      title: `Obra ${i + 4}`,
-      artist: `Artista ${i + 4}`,
-      category: ['Pintura', 'Escultura', 'Fotografía', 'Digital'][i % 4],
-      year: 2024 - (i % 3),
-      image: '/main.png',
-      likes: Math.floor(Math.random() * 1000),
-      views: Math.floor(Math.random() * 5000),
-      slug: `obra-${i + 4}`,
-      created_at: new Date(2024, 0, i + 1).toISOString()
-    }))
-  ];
+  artworks.value = buildDemoGallery();
 });
 </script>
 
 <style scoped>
 .pagination-btn {
-  @apply p-2 border border-gray-300 rounded-lg text-gray-600 hover:border-wine hover:text-wine transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply rounded-xl border border-gray-200/90 p-2.5 text-gray-600 shadow-sm transition-all hover:border-wine/40 hover:bg-white hover:text-wine hover:shadow disabled:cursor-not-allowed disabled:opacity-40;
 }
 </style>
 

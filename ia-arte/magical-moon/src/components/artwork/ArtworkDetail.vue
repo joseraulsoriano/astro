@@ -60,6 +60,7 @@
               :src="artwork.image" 
               :alt="artwork.title"
               class="artwork-image-main"
+              referrerpolicy="no-referrer"
             />
             <div class="image-actions">
               <button @click="downloadImage" class="action-btn">
@@ -101,6 +102,7 @@
                 :key="index"
                 :src="img"
                 :alt="`${artwork.title} - Vista ${index + 2}`"
+                referrerpolicy="no-referrer"
                 @click="selectImage(img)"
                 class="additional-img cursor-pointer hover:opacity-75 transition-opacity"
               />
@@ -235,11 +237,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Viewer3D from './Viewer3D.vue';
 import ViewerAR from './ViewerAR.vue';
 import ReviewsSection from './ReviewsSection.vue';
 import RatingModal from './RatingModal.vue';
+import { slugToDetailStub, buildDemoGallery } from '../../data/museumCollection';
 
 const props = defineProps({
   slug: {
@@ -253,36 +256,46 @@ const artwork = ref(null);
 const viewMode = ref('2d');
 const isLiked = ref(false);
 const userRating = ref(null);
-const showRatingModal = ref(false);
+const DEMO_GLB = 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
 
 const fetchArtwork = async () => {
   loading.value = true;
-  // TODO: Obtener desde Supabase
   setTimeout(() => {
+    const row = buildDemoGallery().find((x) => x.slug === props.slug);
+    const stub = slugToDetailStub(props.slug);
+    const isVan = props.slug === 'noche-estrellada';
+
     artwork.value = {
-      id: 1,
+      id: row?.id ?? 1,
       slug: props.slug,
-      title: 'Noche Estrellada',
-      artist: 'Vincent van Gogh',
-      artistId: 1,
-      artistVerified: true,
-      description: 'Una de las obras más famosas del postimpresionismo, pintada en 1889 durante la estancia de van Gogh en el sanatorio de Saint-Rémy-de-Provence. La obra muestra un cielo nocturno con remolinos, estrellas brillantes y un ciprés en primer plano.',
-      image: '/main.png',
-      model3D: '/models/noche-estrellada.glb',
-      additionalImages: ['/1.png', '/2.png'],
-      year: 1889,
-      category: 'Pintura',
-      technique: 'Óleo sobre lienzo',
-      dimensions: '73.7 cm × 92.1 cm',
-      likes: 1250,
-      views: 5400,
-      commentsCount: 89,
+      title: row?.title ?? stub.titleHint,
+      artist: row?.artist ?? stub.artistHint,
+      artistId: isVan ? 'van-gogh' : String(row?.id ?? 1),
+      artistVerified: isVan,
+      description:
+        row?.description ??
+        `«${stub.titleHint}» forma parte de la muestra demo de Museo Fragmentos: un fragmento compartido para el estudio y el disfrute.`,
+      image: stub.image,
+      model3D: props.slug === 'obra-digital' ? DEMO_GLB : null,
+      additionalImages: stub.additionalImages,
+      year: row?.year ?? stub.yearHint,
+      category: row?.category ?? 'Pintura',
+      technique:
+        row?.category === 'Digital'
+          ? 'Archivo digital y acabado en panel'
+          : row?.category === 'Fotografía'
+            ? 'Impresión pigmento sobre papel algodón'
+            : 'Óleo sobre lienzo (referencia histórica o réplica digital)',
+      dimensions: 'Formato variable en sala (demo)',
+      likes: row?.likes ?? 640,
+      views: row?.views ?? 2400,
+      commentsCount: 28,
       rating: 4.5,
-      ratingsCount: 234,
-      created_at: '2024-01-15'
+      ratingsCount: 156,
+      created_at: row?.created_at ?? '2024-01-15',
     };
     loading.value = false;
-  }, 1000);
+  }, 480);
 };
 
 const selectImage = (img) => {
@@ -324,6 +337,20 @@ const handleRated = (rating) => {
   showRatingModal.value = false;
   updateRating({ rating: rating.rating, count: artwork.value.ratingsCount + 1 });
 };
+
+const applyViewFromQuery = () => {
+  if (!artwork.value || typeof window === 'undefined') return;
+  const mode = new URLSearchParams(window.location.search).get('v');
+  if ((mode === '3d' || mode === 'ar') && artwork.value.model3D) {
+    viewMode.value = mode;
+    return;
+  }
+  viewMode.value = '2d';
+};
+
+watch(artwork, (a) => {
+  if (a) applyViewFromQuery();
+});
 
 onMounted(() => {
   fetchArtwork();

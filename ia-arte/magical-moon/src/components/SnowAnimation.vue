@@ -1,31 +1,30 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const snowflakes = ref([]);
+const motes = ref([]);
 let intervalId = null;
 const reducedMotion = ref(false);
 
-const createSnowflake = () => {
-  const id = Date.now() + Math.random();
-  const size = Math.random() * 4 + 2; // Tamaño entre 2-6px
-  snowflakes.value.push({
+const MAX_MOTES = 36;
+
+const createMote = () => {
+  const id = `${Date.now()}-${Math.random()}`;
+  motes.value.push({
     id,
-    left: `${Math.random() * 100}%`,
-    duration: `${3 + Math.random() * 4}s`, // Duración entre 3-7s
-    delay: `${Math.random() * 2}s`,
-    size: `${size}px`,
-    opacity: Math.random() * 0.5 + 0.3, // Opacidad entre 0.3-0.8
+    left: `${6 + Math.random() * 88}%`,
+    duration: `${14 + Math.random() * 12}s`,
+    delay: `${Math.random() * 4}s`,
+    size: `${1.5 + Math.random() * 2}px`,
+    opacity: 0.12 + Math.random() * 0.18,
   });
 
-  // Mantener máximo 100 copos para performance
-  if (snowflakes.value.length > 100) {
-    snowflakes.value.shift();
+  if (motes.value.length > MAX_MOTES) {
+    motes.value.shift();
   }
 
-  // Eliminar el copo después de la animación
   setTimeout(() => {
-    snowflakes.value = snowflakes.value.filter((flake) => flake.id !== id);
-  }, 7000);
+    motes.value = motes.value.filter((m) => m.id !== id);
+  }, 28000);
 };
 
 onMounted(() => {
@@ -34,65 +33,62 @@ onMounted(() => {
     return;
   }
 
-  intervalId = setInterval(createSnowflake, 150);
+  intervalId = setInterval(createMote, 420);
 
-  for (let i = 0; i < 20; i++) {
-    setTimeout(() => createSnowflake(), i * 100);
+  for (let i = 0; i < 10; i += 1) {
+    setTimeout(() => createMote(), i * 120);
   }
 });
 
 onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 
 <template>
-  <div id="snowfall" class="fixed inset-0 pointer-events-none z-0" :class="{ 'snowfall--static': reducedMotion }">
+  <div
+    id="ambient-particles"
+    class="ambient pointer-events-none fixed inset-0 z-0 overflow-hidden"
+    :class="{ 'ambient--static': reducedMotion }"
+    aria-hidden="true"
+  >
     <div
-      v-for="flake in snowflakes"
-      :key="flake.id"
-      class="snowflake"
-      :style="{ 
-        left: flake.left, 
-        animationDuration: flake.duration,
-        animationDelay: flake.delay,
-        width: flake.size,
-        height: flake.size,
-        opacity: flake.opacity
+      v-for="m in motes"
+      :key="m.id"
+      class="mote"
+      :style="{
+        left: m.left,
+        animationDuration: m.duration,
+        animationDelay: m.delay,
+        width: m.size,
+        height: m.size,
+        opacity: m.opacity,
       }"
-    ></div>
+    />
   </div>
 </template>
 
 <style scoped>
-#snowfall {
-  overflow: hidden;
-}
-
-.snowflake {
+.mote {
   position: absolute;
-  top: -10px;
-  background: radial-gradient(circle, rgba(114, 47, 55, 0.4) 0%, rgba(114, 47, 55, 0.1) 100%);
-  border-radius: 50%;
-  animation: snowfall linear infinite;
-  box-shadow: 0 0 6px rgba(114, 47, 55, 0.3);
+  top: -8px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, rgba(147, 197, 253, 0.45), rgba(148, 163, 184, 0.12) 70%);
+  box-shadow: 0 0 12px rgba(125, 211, 252, 0.15);
+  animation: drift-fall linear infinite;
 }
 
-@keyframes snowfall {
+@keyframes drift-fall {
   0% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-    opacity: 0.4;
+    transform: translateY(0) translateX(0);
   }
   100% {
-    transform: translateY(100vh) translateX(20px) rotate(360deg);
-    opacity: 0.1;
+    transform: translateY(100vh) translateX(-18px);
   }
 }
 
-.snowfall--static .snowflake {
+.ambient--static .mote {
   animation: none;
-  opacity: 0.15;
+  opacity: 0.08;
 }
 </style>

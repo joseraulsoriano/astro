@@ -45,7 +45,7 @@
 
           <!-- Info -->
           <div class="flex-1 text-center md:text-left">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+          <h1 class="font-display text-4xl font-semibold tracking-tight text-gray-900 md:text-5xl mb-2">
               {{ artist.name }}
             </h1>
             <p class="text-xl text-gray-600 mb-4">{{ artist.role }}</p>
@@ -228,6 +228,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { buildDemoArtists, buildDemoGallery, coverAt } from '../../data/museumCollection';
 
 const props = defineProps({
   artistId: {
@@ -245,38 +246,74 @@ const isFollowing = ref(false);
 
 const fetchArtist = async () => {
   loading.value = true;
-  // TODO: Obtener desde Supabase
   setTimeout(() => {
+    const id = props.artistId;
+    const demoList = buildDemoArtists();
+    const demo = demoList.find((a) => String(a.id) === String(id));
+
+    if (!demo) {
+      artist.value = null;
+      loading.value = false;
+      return;
+    }
+
+    const isVan = id === 'van-gogh';
+    const numericId = typeof demo.id === 'number' ? demo.id : 11;
+
     artist.value = {
-      id: props.artistId,
-      name: 'Vincent van Gogh',
-      role: 'Pintor',
-      avatar: '/main.png',
-      verified: true,
-      bio: 'Pintor postimpresionista holandés, considerado uno de los más grandes pintores de todos los tiempos. Sus obras, caracterizadas por pinceladas audaces y colores vibrantes, han influido profundamente en el arte moderno.',
-      artworkCount: 12,
-      followers: 1250,
-      following: 89,
-      roomsCount: 2,
-      location: 'Países Bajos',
+      id: demo.id,
+      name: demo.name,
+      role: demo.role,
+      avatar: demo.avatar,
+      verified: demo.verified,
+      bio: isVan
+        ? 'Pintor postimpresionista: pincelada visible, color casi musical y un impulso vital difícil de encerrar en una sola etiqueta.'
+        : `${demo.name} trabaja series breves, casi diarios visuales, donde el accidente y el control negocian cada fondo.`,
+      artworkCount: demo.artworkCount,
+      followers: demo.followers,
+      following: 32 + (numericId % 80),
+      roomsCount: demo.verified ? 2 : 1,
+      location: isVan ? 'Países Bajos' : 'Estudio itinerante',
       website: 'https://example.com',
       joinedDate: '2023-01-15',
-      totalViews: 45000
+      totalViews: demo.followers * 24,
     };
 
-    artworks.value = [
-      { id: 1, title: 'Noche Estrellada', year: 1889, image: '/main.png', likes: 1250, slug: 'noche-estrellada' },
-      { id: 2, title: 'Los Girasoles', year: 1888, image: '/1.png', likes: 980, slug: 'girasoles' },
-      { id: 3, title: 'Autorretrato', year: 1889, image: '/2.png', likes: 756, slug: 'autorretrato' }
-    ];
+    if (isVan) {
+      artworks.value = [
+        { id: 1, title: 'La noche estrellada', year: 1889, image: coverAt(0), likes: 1250, slug: 'noche-estrellada' },
+        { id: 2, title: 'Los girasoles', year: 1888, image: coverAt(10), likes: 980, slug: 'girasoles' },
+        { id: 3, title: 'Autorretrato', year: 1889, image: coverAt(15), likes: 756, slug: 'autorretrato' },
+      ];
+      rooms.value = [
+        { id: 1, name: 'Paisajes íntimos', image: coverAt(6), artworkCount: 6 },
+        { id: 2, name: 'Luz de Arlés', image: coverAt(20), artworkCount: 5 },
+      ];
+    } else {
+      const g = buildDemoGallery();
+      const pick = (slug) => g.find((x) => x.slug === slug);
+      const s1 = pick(`obra-${numericId + 4}`) || pick('obra-8');
+      const s2 = pick(`obra-${numericId + 8}`) || pick('obra-9');
+      const s3 = pick(`obra-${numericId + 12}`) || pick('obra-10');
+      const fallback = (x, i) =>
+        x || { title: 'Pieza de estudio', year: 2022, image: coverAt(numericId + i), likes: 120, slug: `obra-${8 + i}` };
 
-    rooms.value = [
-      { id: 1, name: 'Obras Maestras', image: '/main.png', artworkCount: 8 },
-      { id: 2, name: 'Colección Personal', image: '/1.png', artworkCount: 4 }
-    ];
+      const a1 = fallback(s1, 0);
+      const a2 = fallback(s2, 1);
+      const a3 = fallback(s3, 2);
+      artworks.value = [
+        { id: 1, title: a1.title, year: a1.year, image: a1.image, likes: a1.likes, slug: a1.slug },
+        { id: 2, title: a2.title, year: a2.year, image: a2.image, likes: a2.likes, slug: a2.slug },
+        { id: 3, title: a3.title, year: a3.year, image: a3.image, likes: a3.likes, slug: a3.slug },
+      ];
+      rooms.value = [
+        { id: 1, name: 'Sala principal', image: coverAt(numericId + 4), artworkCount: 4 },
+        { id: 2, name: 'Archivo reciente', image: coverAt(numericId + 11), artworkCount: 3 },
+      ];
+    }
 
     loading.value = false;
-  }, 1000);
+  }, 650);
 };
 
 const toggleFollow = () => {

@@ -22,15 +22,15 @@
           <div class="info-card">
             <h4 class="info-title">Contacto</h4>
             <p class="text-gray-600">¿Tienes preguntas o sugerencias?</p>
-            <a href="/sobre-nosotros" class="text-wine hover:text-wine-dark font-medium mt-2 inline-block">
-              Ir a Sobre nosotros →
+            <a href="/buscar" class="font-medium mt-2 inline-block text-wine hover:text-wine-dark">
+              Buscar en el museo →
             </a>
           </div>
           <div class="info-card">
             <h4 class="info-title">Colabora</h4>
             <p class="text-gray-600">¿Quieres colaborar con el proyecto?</p>
-            <a href="/sobre-nosotros#informacion-legal" class="text-wine hover:text-wine-dark font-medium mt-2 inline-block">
-              Información del proyecto →
+            <a href="/#aviso-legal-demo" class="font-medium mt-2 inline-block text-wine hover:text-wine-dark">
+              Aviso legal (demo) →
             </a>
           </div>
         </div>

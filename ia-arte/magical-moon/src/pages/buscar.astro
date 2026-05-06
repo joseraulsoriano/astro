@@ -4,13 +4,16 @@ import SearchResults from '../components/search/SearchResults.vue';
 import SearchBar from '../components/gallery/SearchBar.vue';
 ---
 
-<Layout title="Búsqueda - Museo Fragmentos">
-  <div class="min-h-screen bg-white pt-20">
+<Layout
+  title="Buscar — Museo Fragmentos"
+  description="Busca obras, artistas y técnicas en todo el museo digital. Resultados en tiempo real."
+>
+  <div class="min-h-screen bg-[#f4f7fa] pt-20">
     <!-- Header de Búsqueda -->
-    <section class="bg-gradient-to-b from-wine/5 to-white py-12 border-b border-gray-200">
+    <section class="border-b border-slate-200/90 bg-gradient-to-b from-sky-50/80 via-white to-[#f4f7fa] py-12">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
-          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">
+          <h1 class="font-display mb-6 text-center text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
             Buscar en Museo Fragmentos
           </h1>
           <SearchBar client:load />

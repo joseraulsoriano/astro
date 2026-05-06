@@ -1,19 +1,19 @@
 <template>
-  <section class="hero relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-white to-off-white">
+  <section class="hero relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9]">
     <!-- Background con Blanco y Vino -->
     <div class="absolute inset-0 z-0">
       <div class="stars"></div>
       <!-- Gradientes suaves -->
-      <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-wine/5 via-transparent to-accent/10"></div>
+      <div class="absolute left-0 top-0 h-full w-full bg-gradient-to-br from-sky-50/90 via-transparent to-slate-100/70"></div>
     </div>
     
     <!-- Anfitrión Virtual -->
-    <HostGreeting client:load />
+    <HostGreeting />
     
     <!-- Moon container removed - replaced with host greeting -->
 
     <!-- Content -->
-    <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+    <div class="container relative z-10 mx-auto px-4 pb-36 pt-24 text-center sm:px-6 sm:pb-28 sm:pt-28 md:pb-24 md:pt-32 lg:px-8">
       <div class="max-w-4xl mx-auto">
         <!-- Mensaje de Bienvenida Personalizado -->
         <div class="welcome-message mb-8">
@@ -25,17 +25,17 @@
 
         <!-- Main Heading -->
         <h1 class="hero-title mb-6">
-          <span class="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-2">
+          <span class="font-display block text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl mb-2">
             Bienvenido a
           </span>
-          <span class="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-wine">
+          <span class="font-display block text-5xl font-semibold tracking-tight text-wine sm:text-6xl md:text-7xl lg:text-8xl">
             Museo Fragmentos
           </span>
         </h1>
 
         <!-- Subtitle -->
-        <p class="text-xl sm:text-2xl md:text-3xl text-gray-700 mb-4 font-light">
-          Museo Digital de Arte
+        <p class="font-display text-xl text-gray-700 sm:text-2xl md:text-3xl mb-4 font-medium">
+          Museo digital de arte
         </p>
         
         <!-- Mensaje Principal -->
@@ -91,8 +91,8 @@
     </div>
 
     <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
-      <a href="#features" class="flex flex-col items-center text-gray-400 hover:text-white transition-colors">
+    <div class="pointer-events-none absolute bottom-[max(5.5rem,env(safe-area-inset-bottom))] left-1/2 z-10 hidden -translate-x-1/2 sm:pointer-events-auto sm:bottom-8 sm:flex sm:flex-col sm:animate-bounce">
+      <a href="#features" class="pointer-events-auto flex flex-col items-center text-slate-400 transition-colors hover:text-wine">
         <span class="text-sm mb-2">Desplázate</span>
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -116,8 +116,8 @@ const stats = ref({
 
 <style scoped>
 .hero {
-  background: radial-gradient(ellipse at top, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
-              radial-gradient(ellipse at bottom, rgba(245, 230, 211, 0.1) 0%, transparent 50%);
+  background: radial-gradient(ellipse at top, rgb(186 230 253 / 0.25) 0%, transparent 52%),
+    radial-gradient(ellipse at bottom, rgb(203 213 225 / 0.35) 0%, transparent 50%);
 }
 
 .hero-message {
@@ -139,14 +139,14 @@ const stats = ref({
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: 
-    radial-gradient(2px 2px at 20% 30%, rgba(114, 47, 55, 0.3), transparent),
-    radial-gradient(2px 2px at 60% 70%, rgba(114, 47, 55, 0.2), transparent),
-    radial-gradient(1px 1px at 50% 50%, rgba(114, 47, 55, 0.2), transparent),
-    radial-gradient(1px 1px at 80% 10%, rgba(114, 47, 55, 0.3), transparent),
-    radial-gradient(2px 2px at 90% 60%, rgba(114, 47, 55, 0.2), transparent),
-    radial-gradient(1px 1px at 33% 80%, rgba(114, 47, 55, 0.2), transparent),
-    radial-gradient(1px 1px at 10% 40%, rgba(114, 47, 55, 0.3), transparent);
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgb(61 106 140 / 0.18), transparent),
+    radial-gradient(2px 2px at 60% 70%, rgb(59 130 246 / 0.12), transparent),
+    radial-gradient(1px 1px at 50% 50%, rgb(100 116 139 / 0.2), transparent),
+    radial-gradient(1px 1px at 80% 10%, rgb(61 106 140 / 0.15), transparent),
+    radial-gradient(2px 2px at 90% 60%, rgb(125 211 252 / 0.2), transparent),
+    radial-gradient(1px 1px at 33% 80%, rgb(71 85 105 / 0.18), transparent),
+    radial-gradient(1px 1px at 10% 40%, rgb(61 106 140 / 0.12), transparent);
   background-repeat: repeat;
   background-size: 200% 200%;
   animation: stars 20s linear infinite;
@@ -205,7 +205,7 @@ const stats = ref({
 }
 
 .stat-label {
-  @apply text-gray-600 text-sm uppercase tracking-wider;
+  @apply text-gray-700 text-sm uppercase tracking-wider;
 }
 </style>
 

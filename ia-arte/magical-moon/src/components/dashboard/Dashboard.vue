@@ -203,6 +203,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { coverAt } from '../../data/museumCollection';
 
 const isAuthenticated = ref(true); // TODO: Verificar autenticación real
 const activeTab = ref('obras');
@@ -230,24 +231,24 @@ const userStats = ref({
 const userArtworks = ref([
   {
     id: 1,
-    title: 'Mi Primera Obra',
-    image: '/main.png',
+    title: 'Mi primera obra',
+    image: coverAt(12),
     slug: 'mi-primera-obra',
     views: 1250,
     likes: 89,
     status: 'published',
-    statusLabel: 'Publicada'
+    statusLabel: 'Publicada',
   },
   {
     id: 2,
-    title: 'Obra en Proceso',
-    image: '/1.png',
+    title: 'Obra en proceso',
+    image: coverAt(23),
     slug: 'obra-en-proceso',
     views: 0,
     likes: 0,
     status: 'draft',
-    statusLabel: 'Borrador'
-  }
+    statusLabel: 'Borrador',
+  },
 ]);
 
 const editArtwork = (artwork) => {

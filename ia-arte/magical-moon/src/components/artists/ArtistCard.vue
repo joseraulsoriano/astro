@@ -6,6 +6,9 @@
           :src="artist.avatar" 
           :alt="artist.name"
           class="artist-avatar"
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
         />
         <div v-if="artist.verified" class="verified-badge">
           <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -27,12 +30,12 @@
         <span class="stat-label">Seguidores</span>
       </div>
     </div>
-    <button class="view-profile-btn">
-      Ver Perfil
-      <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <span class="view-profile-cta">
+      Ver perfil
+      <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
-    </button>
+    </span>
   </a>
 </template>
 
@@ -47,7 +50,7 @@ defineProps({
 
 <style scoped>
 .artist-card {
-  @apply bg-white border border-gray-200 rounded-xl p-6 hover:border-wine/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 flex flex-col;
+  @apply flex flex-col rounded-2xl border border-stone-200/90 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-wine/30 hover:shadow-lg;
 }
 
 .artist-header {
@@ -67,7 +70,7 @@ defineProps({
 }
 
 .artist-name {
-  @apply text-xl font-semibold text-gray-900 mb-1;
+  @apply font-display text-xl font-semibold tracking-tight text-gray-900 mb-1;
 }
 
 .artist-role {
@@ -94,8 +97,8 @@ defineProps({
   @apply w-px h-8 bg-gray-200;
 }
 
-.view-profile-btn {
-  @apply w-full px-4 py-2 bg-wine text-white font-medium rounded-lg hover:bg-wine-dark transition-colors flex items-center justify-center;
+.view-profile-cta {
+  @apply mt-auto flex w-full items-center justify-center rounded-xl bg-wine px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-wine-dark;
 }
 </style>
 

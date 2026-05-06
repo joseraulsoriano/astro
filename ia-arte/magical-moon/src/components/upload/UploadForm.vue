@@ -492,11 +492,11 @@ onMounted(() => {
 }
 
 .upload-card {
-  @apply bg-white border border-gray-200 rounded-2xl shadow-xl p-8;
+  @apply max-w-4xl rounded-[1.75rem] border border-slate-200 bg-white p-8 shadow-xl ring-1 ring-slate-100;
 }
 
 .section-title {
-  @apply text-2xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200;
+  @apply mb-6 border-b border-slate-200 pb-3 font-display text-2xl font-semibold tracking-tight text-slate-900;
 }
 
 .form-label {
@@ -504,7 +504,7 @@ onMounted(() => {
 }
 
 .form-input {
-  @apply w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-wine focus:ring-2 focus:ring-wine/20 outline-none transition-colors text-gray-900;
+  @apply w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-gray-900 outline-none transition-colors focus:border-wine focus:bg-white focus:ring-2 focus:ring-wine/20;
 }
 
 .checkbox-input {
@@ -512,7 +512,7 @@ onMounted(() => {
 }
 
 .upload-area {
-  @apply border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-wine transition-colors;
+  @apply cursor-pointer rounded-2xl rounded-tr-[2.25rem] border-2 border-dashed border-slate-300 p-8 text-center transition-colors hover:border-wine/50 hover:bg-sky-50/30;
 }
 
 .upload-placeholder {
@@ -524,15 +524,15 @@ onMounted(() => {
 }
 
 .preview-image {
-  @apply w-full h-64 object-cover rounded-lg;
+  @apply h-64 w-full rounded-2xl object-cover;
 }
 
 .remove-btn {
-  @apply absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-wine transition-colors;
+  @apply absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg leading-none text-slate-600 shadow-md ring-1 ring-slate-200 transition hover:text-wine;
 }
 
 .upload-area-small {
-  @apply border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-wine transition-colors aspect-square;
+  @apply aspect-square cursor-pointer rounded-2xl rounded-bl-md border-2 border-dashed border-slate-300 p-4 text-center transition-colors hover:border-wine/50 hover:bg-sky-50/30;
 }
 
 .upload-placeholder-small {
@@ -544,7 +544,7 @@ onMounted(() => {
 }
 
 .preview-image-small {
-  @apply w-full h-full object-cover rounded-lg;
+  @apply h-full w-full rounded-xl object-cover;
 }
 
 .remove-btn-small {
@@ -580,11 +580,11 @@ onMounted(() => {
 }
 
 .submit-btn {
-  @apply px-8 py-3 bg-wine text-white font-semibold rounded-lg hover:bg-wine-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply rounded-xl bg-wine px-8 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-wine-dark disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .btn-secondary {
-  @apply px-8 py-3 bg-white text-wine border-2 border-wine font-semibold rounded-lg hover:bg-wine/5 transition-colors;
+  @apply rounded-xl border-2 border-wine bg-white px-8 py-3 font-semibold text-wine transition-colors hover:bg-sky-50/60;
 }
 </style>
 

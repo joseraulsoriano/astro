@@ -14,10 +14,20 @@ export async function getStaticPaths() {
   return slugs.map((slug) => ({ params: { slug } }));
 }
 
+function slugToTitle(slug: string) {
+  return slug
+    .split('-')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 const { slug } = Astro.params;
+const label = slugToTitle(slug ?? '');
+const pageTitle = `${label} — Obra | Museo Fragmentos`;
+const pageDescription = `Ficha de la obra «${label}» en Museo Fragmentos: museo digital con acceso gratuito.`;
 ---
 
-<Layout title="Obra - Museo Fragmentos">
-  <ArtworkDetail client:load :slug="slug" />
+<Layout title={pageTitle} description={pageDescription}>
+  <ArtworkDetail client:load slug={slug} />
 </Layout>
-

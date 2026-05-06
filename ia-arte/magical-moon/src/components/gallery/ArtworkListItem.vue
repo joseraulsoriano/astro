@@ -6,6 +6,8 @@
           :src="artwork.image" 
           :alt="artwork.title"
           class="artwork-image"
+          loading="lazy"
+          referrerpolicy="no-referrer"
         />
       </div>
       <div class="flex-1 flex flex-col justify-between">

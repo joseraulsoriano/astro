@@ -50,3 +50,4 @@ desktop.ini
 # PHP demo: datos generados localmente
 *.php.bak
 login/usuarios.txt
+*.md

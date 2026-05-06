@@ -10,10 +10,20 @@ export async function getStaticPaths() {
   return ids.map((id) => ({ params: { id } }));
 }
 
+function idToTitle(id: string) {
+  return id
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 const { id } = Astro.params;
+const label = idToTitle(id ?? '');
+const pageTitle = `${label} — Artista | Museo Fragmentos`;
+const pageDescription = `Perfil y obras del artista «${label}» en Museo Fragmentos: comunidad gratuita del museo digital.`;
 ---
 
-<Layout title="Artista - Museo Fragmentos">
-  <ArtistProfile client:load :artist-id="id" />
+<Layout title={pageTitle} description={pageDescription}>
+  <ArtistProfile client:load artistId={id} />
 </Layout>
-

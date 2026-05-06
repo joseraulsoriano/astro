@@ -1,93 +1,91 @@
 <template>
-  <div class="room-card group">
-    <div class="room-image-wrapper">
-      <img 
-        :src="room.image" 
-        :alt="room.name"
-        class="room-image"
-      />
-      <div class="room-overlay">
-        <a :href="`/sala/${room.id}`" class="overlay-btn-large">
-          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          Entrar a la Sala
-        </a>
+  <article class="room-card group">
+    <a :href="`/sala/${room.id}`" class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-wine focus-visible:ring-offset-2">
+      <div class="room-visual">
+        <img :src="room.image" :alt="room.name" class="room-image" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+        <div class="room-scrim" />
+        <span class="room-cta"> Ver sala </span>
       </div>
-    </div>
-    <div class="room-info">
-      <div class="flex items-start justify-between mb-2">
-        <h3 class="room-title">{{ room.name }}</h3>
-        <span class="room-badge">{{ room.theme }}</span>
-      </div>
-      <p class="room-description">{{ room.description }}</p>
-      <div class="room-footer">
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span class="text-sm text-gray-600">{{ room.creator }}</span>
+      <div class="room-body">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <h3 class="room-title">{{ room.name }}</h3>
+          <span class="room-chip">{{ room.theme }}</span>
         </div>
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span class="text-sm text-gray-600 font-medium">{{ room.artworkCount }} obras</span>
-        </div>
+        <p class="room-description">{{ room.description }}</p>
+        <dl class="room-meta">
+          <div>
+            <dt class="sr-only">Curaduría</dt>
+            <dd>{{ room.creator }}</dd>
+          </div>
+          <div>
+            <dt class="sr-only">Obras</dt>
+            <dd>{{ room.artworkCount }} piezas</dd>
+          </div>
+        </dl>
       </div>
-    </div>
-  </div>
+    </a>
+  </article>
 </template>
 
 <script setup>
 defineProps({
   room: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 });
 </script>
 
 <style scoped>
 .room-card {
-  @apply bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-wine/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2;
+  @apply relative overflow-hidden rounded-[1.65rem] border border-slate-200/90 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-sky-200/90 hover:shadow-[0_26px_52px_rgb(15_23_42_/0.09)];
 }
 
-.room-image-wrapper {
-  @apply relative aspect-video overflow-hidden bg-gray-100;
+.room-card:nth-child(even) .room-visual {
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 88% 100%, 0 100%);
+}
+
+.room-card:nth-child(odd) .room-visual {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 10% 100%, 0 88%);
+}
+
+.room-visual {
+  @apply relative aspect-[5/3] overflow-hidden bg-slate-100;
 }
 
 .room-image {
-  @apply w-full h-full object-cover transition-transform duration-500 group-hover:scale-110;
+  @apply h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04];
 }
 
-.room-overlay {
-  @apply absolute inset-0 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center;
+.room-scrim {
+  @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/45 via-slate-900/10 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100;
 }
 
-.overlay-btn-large {
-  @apply inline-flex items-center px-6 py-3 bg-wine text-white font-semibold rounded-lg hover:bg-wine-dark transition-colors;
+.room-cta {
+  @apply absolute bottom-4 left-4 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm backdrop-blur-sm transition group-hover:bg-white;
 }
 
-.room-info {
-  @apply p-6;
+.room-body {
+  @apply space-y-3 p-6;
 }
 
 .room-title {
-  @apply text-xl font-semibold text-gray-900 flex-1;
+  @apply max-w-[16rem] font-display text-xl font-semibold tracking-tight text-slate-900;
 }
 
-.room-badge {
-  @apply px-3 py-1 text-xs font-medium bg-wine/10 text-wine rounded-full;
+.room-chip {
+  @apply rounded-lg rounded-tr-2xl bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-wine;
 }
 
 .room-description {
-  @apply text-gray-600 mb-4 line-clamp-2;
+  @apply line-clamp-2 text-sm leading-relaxed text-slate-600;
 }
 
-.room-footer {
-  @apply flex items-center justify-between pt-4 border-t border-gray-200;
+.room-meta {
+  @apply flex flex-wrap gap-x-6 gap-y-1 border-t border-slate-100 pt-4 text-sm text-slate-500;
+}
+
+.room-meta dd {
+  @apply m-0;
 }
 </style>
-

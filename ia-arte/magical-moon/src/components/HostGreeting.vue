@@ -1,166 +1,215 @@
 <template>
-  <!-- Anfitrión Virtual en Hero -->
-  <div class="host-greeting-container">
-    <!-- Avatar del Anfitrión flotante -->
-    <div class="host-avatar" :class="{ 'visible': isVisible }">
-      <div class="avatar-circle">
-        <svg class="w-12 h-12 text-wine" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-      </div>
-      <div class="speech-bubble bg-white border border-wine/20 shadow-xl">
-        <p class="text-sm text-gray-800 font-medium">{{ greetingMessage }}</p>
-        <p class="text-xs text-gray-600 mt-1">• Tu guía está aquí para ayudarte</p>
-        <div class="speech-bubble-arrow"></div>
-      </div>
-    </div>
+  <!-- FAB del anfitrión: abre la guía (evento global hacia WelcomeGuide.island) -->
+  <div class="host-wrap">
+    <div
+      class="host-fab"
+      :class="{ visible: isVisible, 'host-fab--open': bubbleOpen }"
+    >
+      <button
+        type="button"
+        class="fab-trigger"
+        :aria-expanded="bubbleOpen"
+        aria-controls="host-greeting-bubble"
+        aria-label="Abrir guía del museo"
+        @click="toggleBubble"
+      >
+        <span class="fab-ring" aria-hidden="true" />
+        <span class="fab-inner">
+          <svg class="h-7 w-7 text-wine" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </span>
+      </button>
 
-    <!-- Indicador de "Nuestro Anfitrión" -->
-    <div class="host-indicator">
-      <div class="flex items-center space-x-2 text-gray-600 text-sm">
-        <div class="w-2 h-2 bg-wine rounded-full animate-pulse"></div>
-        <span>Tu guía está aquí para ayudarte</span>
+      <div
+        v-show="bubbleOpen"
+        id="host-greeting-bubble"
+        class="host-bubble"
+        role="region"
+        aria-live="polite"
+      >
+        <p class="text-sm font-medium leading-snug text-slate-800">{{ greetingMessage }}</p>
+        <button type="button" class="host-open-guide" @click="openGuide">
+          Abrir guía paso a paso
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const GUIDE_EVENT = 'museo-fragmentos:open-guide';
 
 const isVisible = ref(false);
-const greetingMessage = ref('¡Bienvenido! Explora nuestras obras gratis');
+const bubbleOpen = ref(false);
+const greetingMessage = ref('¿Necesitas orientación? Toca para ver la guía.');
 
 const greetings = [
-  '¡Bienvenido! Explora nuestras obras gratis',
-  'Hola, ¿en qué puedo ayudarte hoy?',
-  'Descubre arte increíble sin registro',
-  'Miles de obras esperando por ti',
-  'Tómate tu tiempo, todo es gratis'
+  '¿Necesitas orientación? Toca para ver la guía.',
+  'Aquí tienes la galería, salas y búsqueda en la parte superior.',
+  'Desliza las piezas recientes en la portada desde el móvil.',
+  'Puedes reabrir esta ayuda cuando quieras.',
 ];
 
-const changeGreeting = () => {
-  const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
-  greetingMessage.value = randomGreeting;
+let greetInterval = null;
+
+function pickGreeting() {
+  greetingMessage.value = greetings[Math.floor(Math.random() * greetings.length)];
+}
+
+const toggleBubble = () => {
+  bubbleOpen.value = !bubbleOpen.value;
 };
 
-onMounted(() => {
-  setTimeout(() => {
-    isVisible.value = true;
-  }, 1000);
+const openGuide = () => {
+  bubbleOpen.value = false;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(GUIDE_EVENT));
+  }
+};
 
-  // Cambiar saludo cada 5 segundos
-  setInterval(changeGreeting, 5000);
+const onKeydown = (e) => {
+  if (e.key === 'Escape') bubbleOpen.value = false;
+};
+
+let showTimer = null;
+
+onMounted(() => {
+  showTimer = window.setTimeout(() => {
+    isVisible.value = true;
+  }, 800);
+  greetInterval = window.setInterval(pickGreeting, 12000);
+  window.addEventListener('keydown', onKeydown);
+});
+
+onUnmounted(() => {
+  if (showTimer != null) {
+    clearTimeout(showTimer);
+    showTimer = null;
+  }
+  if (greetInterval != null) {
+    clearInterval(greetInterval);
+    greetInterval = null;
+  }
+  window.removeEventListener('keydown', onKeydown);
 });
 </script>
 
 <style scoped>
-.host-greeting-container {
-  position: relative;
+.host-wrap {
+  /* ancla visual sin position fixed en el hijo repetido */
+  pointer-events: none;
 }
 
-.host-avatar {
+.host-fab {
+  pointer-events: auto;
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 40;
+  z-index: 45;
+  right: max(0.75rem, env(safe-area-inset-right, 0px));
+  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.65rem;
   opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.5s ease;
-  cursor: pointer;
+  transform: translateY(12px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
 }
 
-.host-avatar.visible {
+.host-fab.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.avatar-circle {
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%);
-  border: 3px solid #722F37;
-  border-radius: 50%;
+@media (min-width: 640px) {
+  .host-fab {
+    right: max(1.25rem, env(safe-area-inset-right, 0px));
+    bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.fab-trigger {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 9999px;
+  outline: none;
+}
+
+.fab-trigger:focus-visible .fab-inner {
+  @apply ring-2 ring-wine ring-offset-2;
+}
+
+.fab-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: conic-gradient(from 160deg, rgb(125 211 252 / 0.65), rgb(61 106 140 / 0.45), rgb(226 232 240 / 0.8));
+  opacity: 0.85;
+}
+
+.fab-inner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(114, 47, 55, 0.2);
-  position: relative;
-  animation: float 3s ease-in-out infinite;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 9999px;
+  border: 2px solid rgb(61 106 140);
+  background: linear-gradient(160deg, #ffffff 0%, #f1f5f9 100%);
+  box-shadow: 0 10px 30px rgb(15 23 42 / 0.12);
 }
 
-.avatar-circle::before {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background: #F5E6D3;
-  border-radius: 50%;
-  top: 8px;
-  right: 8px;
-  border: 2px solid white;
-  animation: pulse 2s infinite;
+.host-fab--open .fab-inner {
+  @apply bg-sky-50;
 }
 
-.speech-bubble {
-  position: absolute;
-  bottom: 80px;
-  right: 0;
-  padding: 12px 16px;
-  border-radius: 12px;
-  max-width: 250px;
-  min-width: 200px;
-  animation: fadeInUp 0.5s ease;
+.host-bubble {
+  width: min(18rem, calc(100vw - 2.5rem));
+  max-width: 18rem;
+  border-radius: 1rem;
+  border: 1px solid rgb(226 232 240);
+  background: rgb(255 255 255 / 0.98);
+  padding: 0.75rem 0.875rem;
+  box-shadow:
+    0 18px 40px rgb(15 23 42 / 0.12),
+    0 0 0 1px rgb(255 255 255 / 0.85) inset;
 }
 
-.speech-bubble-arrow {
-  position: absolute;
-  bottom: -8px;
-  right: 20px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid white;
+.host-open-guide {
+  margin-top: 0.5rem;
+  width: 100%;
+  border-radius: 0.65rem;
+  background: rgb(61 106 140);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.65rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.host-indicator {
-  position: fixed;
-  bottom: 6rem;
-  right: 2rem;
-  z-index: 39;
-  opacity: 0.8;
+.host-open-guide:hover {
+  background: rgb(46 84 112);
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+@media (prefers-reduced-motion: reduce) {
+  .host-fab {
+    transition: none;
   }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(0.9);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .fab-ring {
+    animation: none;
   }
 }
 </style>
-

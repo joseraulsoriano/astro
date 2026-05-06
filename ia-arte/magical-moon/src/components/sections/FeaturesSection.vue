@@ -1,124 +1,219 @@
 <template>
-  <section id="features" class="features py-20 md:py-32 relative">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          Características Únicas
+  <section id="features" ref="sectionRef" class="features relative py-20 md:py-28">
+    <div class="container relative mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Decora forma suave -->
+      <div
+        class="pointer-events-none absolute -left-24 top-[12%] h-48 w-48 rounded-[40%_60%_55%_45%] bg-sky-100/35 blur-2xl animate-drift-slow md:block"
+        aria-hidden="true"
+      />
+      <div
+        class="pointer-events-none absolute -right-16 bottom-[8%] h-56 w-56 rounded-[55%_45%_45%_55%] bg-slate-200/50 blur-2xl animate-drift-slow md:block"
+        style="animation-delay: -4s"
+        aria-hidden="true"
+      />
+
+      <div class="relative mb-14 text-center">
+        <p class="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Fragmentos útiles</p>
+        <h2 class="font-display text-4xl tracking-tight text-slate-900 md:text-5xl">
+          Una lectura cómoda del arte digital
         </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Descubre las formas innovadoras de visualizar y experimentar el arte
+        <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
+          Menos decoración innecesaria: foco en recorrer, encontrar y compartir obra con vista clara.
         </p>
       </div>
 
-      <!-- Features Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Feature 1: Vista 2D -->
-        <div class="feature-card group">
-          <div class="feature-icon">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+      <div class="relative grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+        <article
+          v-for="(item, i) in cards"
+          :key="item.title"
+          :ref="(el) => setCardRef(el, i)"
+          class="feature-card"
+          :class="{ 'feature-card--visible': visible[i] }"
+        >
+          <div class="blob" :style="{ '--blob': item.blob }" aria-hidden="true" />
+          <div class="relative">
+            <p class="eyebrow">{{ item.step }}</p>
+            <h3 class="feature-title">{{ item.title }}</h3>
+            <p class="feature-description">{{ item.text }}</p>
           </div>
-          <h3 class="feature-title">Vista Normal (2D)</h3>
-          <p class="feature-description">
-            Visualiza obras de arte en alta resolución con todos sus detalles. Explora pinturas, fotografías y arte digital.
-          </p>
-        </div>
-
-        <!-- Feature 2: Vista 3D -->
-        <div class="feature-card group">
-          <div class="feature-icon">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-          </div>
-          <h3 class="feature-title">Proyección 3D</h3>
-          <p class="feature-description">
-            Experimenta obras en modelos 3D interactivos. Rota, acerca y explora cada ángulo como si estuvieras allí.
-          </p>
-        </div>
-
-        <!-- Feature 3: Realidad Aumentada -->
-        <div class="feature-card group">
-          <div class="feature-icon">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-          </div>
-          <h3 class="feature-title">Realidad Aumentada</h3>
-          <p class="feature-description">
-            Coloca obras de arte en tu espacio real usando la cámara de tu dispositivo. Ve cómo se verían en tu pared.
-          </p>
-        </div>
-
-        <!-- Feature 4: Salas Virtuales -->
-        <div class="feature-card group">
-          <div class="feature-icon">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          </div>
-          <h3 class="feature-title">Salas Virtuales</h3>
-          <p class="feature-description">
-            Recorre exposiciones temáticas organizadas en salas virtuales 3D. Explora colecciones curadas por expertos.
-          </p>
-        </div>
-
-        <!-- Feature 5: Descubrimiento -->
-        <div class="feature-card group">
-          <div class="feature-icon">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <h3 class="feature-title">Búsqueda Avanzada</h3>
-          <p class="feature-description">
-            Encuentra obras por artista, categoría, técnica, época o palabras clave. Navegación intuitiva y filtros potentes.
-          </p>
-        </div>
-
-        <!-- Feature 6: Gratis -->
-        <div class="feature-card group">
-          <div class="feature-icon">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 class="feature-title">100% Gratuito</h3>
-          <p class="feature-description">
-            Plataforma completamente gratuita para artistas y visitantes. Sin costos ocultos, sin suscripciones.
-          </p>
-        </div>
+        </article>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-// Componente de características
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+
+const sectionRef = ref(null);
+const cardRefs = ref([]);
+const visible = ref([]);
+let observer;
+
+function setCardRef(el, i) {
+  if (el) cardRefs.value[i] = el;
+}
+
+const cards = [
+  {
+    step: '01 · Visual',
+    title: 'Vistas 2D nítidas',
+    text: 'Imágenes con espacio neutro para que coloreado y materia se lean sin cansar la vista.',
+    blob: '210deg',
+  },
+  {
+    step: '02 · Espacio',
+    title: 'Modelo 3D cuando exista',
+    text: 'Algunas piezas demo permiten orbitar sobre un archivo glTF; si no hay modelo, el flujo vuelve a 2D.',
+    blob: '125deg',
+  },
+  {
+    step: '03 · Lugar real',
+    title: 'AR orientativa',
+    text: 'Vista aumentada donde el dispositivo y el recurso lo permitan; es un modo extra, no el centro.',
+    blob: '285deg',
+  },
+  {
+    step: '04 · Sala',
+    title: 'Salas temáticas',
+    text: 'Recorridos agrupados por tono visual y curaduría, sin perder referencia entre piezas.',
+    blob: '40deg',
+  },
+  {
+    step: '05 · Hallazgos',
+    title: 'Búsqueda conectada a datos demo',
+    text: 'Sugerencias reales desde la colección de prueba y resultados agrupados por tipo.',
+    blob: '320deg',
+  },
+  {
+    step: '06 · Abierto',
+    title: 'Gratis en este entorno demo',
+    text: 'Sin paywall aquí; el proyecto prioriza muestra técnica y experiencia antes que cobro.',
+    blob: '175deg',
+  },
+];
+
+visible.value = cards.map(() => false);
+
+onMounted(() => {
+  if (typeof window === 'undefined') return;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    visible.value = cards.map(() => true);
+    return;
+  }
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const idx = cardRefs.value.indexOf(entry.target);
+        if (idx === -1) return;
+        const next = [...visible.value];
+        next[idx] = true;
+        visible.value = next;
+      });
+    },
+    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+  );
+
+  nextTick(() => {
+    cardRefs.value.filter(Boolean).forEach((el) => observer?.observe(el));
+  });
+});
+
+onUnmounted(() => {
+  observer?.disconnect();
+});
 </script>
 
 <style scoped>
 .features {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%);
+  background: linear-gradient(165deg, #f8fafc 0%, #ffffff 52%, #f1f5f9 100%);
 }
 
 .feature-card {
-  @apply bg-white border border-gray-200 rounded-xl p-8 hover:border-wine/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2;
+  position: relative;
+  overflow: hidden;
+  padding: 1.75rem 1.5rem;
+  opacity: 0;
+  transform: translateY(1.125rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  border-radius: 1.75rem;
+  border: 1px solid rgb(226 232 240 / 0.85);
+  background: rgb(255 255 255 / 0.72);
+  box-shadow: 0 14px 40px rgb(100 116 139 / 0.06);
 }
 
-.feature-icon {
-  @apply w-16 h-16 mb-6 bg-wine/10 border border-wine/20 rounded-lg flex items-center justify-center text-wine group-hover:scale-110 transition-transform duration-300;
+.feature-card:nth-child(3n + 2) {
+  border-radius: 1.5rem 2.25rem 1.85rem 1.25rem;
+}
+
+.feature-card:nth-child(3n) {
+  border-radius: 2rem 1.25rem 1.5rem 2.35rem;
+}
+
+.feature-card:hover {
+  @apply border-sky-200/80 shadow-lg;
+}
+
+.feature-card--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.blob {
+  position: absolute;
+  right: -2rem;
+  top: -2.5rem;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 58% 42% 45% 55% / 52% 48% 60% 40%;
+  opacity: 0.5;
+  background: linear-gradient(
+    var(--blob, 180deg),
+    rgb(186 230 253 / 0.45),
+    rgb(203 213 225 / 0.25),
+    rgb(226 232 240 / 0.15)
+  );
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feature-card:hover .blob {
+  transform: rotate(-8deg) scale(1.05);
+}
+
+.eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.16em] text-slate-500;
 }
 
 .feature-title {
-  @apply text-2xl font-bold text-gray-900 mb-4;
+  @apply mt-3 font-display text-xl font-semibold tracking-tight text-slate-900 md:text-[1.35rem];
 }
 
 .feature-description {
-  @apply text-gray-600 leading-relaxed;
+  @apply mt-2 text-[0.945rem] leading-relaxed text-slate-600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none;
+  }
+
+  .feature-card:hover .blob {
+    transform: none;
+  }
+
+  .blob {
+    opacity: 0.28;
+    transition: none;
+  }
 }
 </style>
-

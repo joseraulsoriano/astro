@@ -1,181 +1,308 @@
 <template>
-  <!-- Welcome Modal/Guide -->
-  <div v-if="showWelcome" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" @click.self="closeWelcome">
-    <div class="w-full max-w-4xl mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300">
-      <!-- Header con gradiente vino -->
-      <div class="bg-gradient-to-r from-wine to-wine-dark px-8 py-6 text-white">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
+  <!-- Guía unificada: intro + pasos dentro del mismo diálogo (responsive, sin overlays rotos) -->
+  <teleport to="body">
+    <div
+      v-if="isOpen"
+      role="presentation"
+      class="guide-backdrop fixed inset-0 z-[90] flex items-end justify-center bg-slate-900/50 backdrop-blur-sm motion-reduce:bg-slate-900/70 motion-reduce:backdrop-blur-none sm:items-center sm:p-6"
+      @click.self="onBackdropClose"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="headingId"
+        tabindex="-1"
+        class="flex max-h-[min(92dvh,760px)] w-full max-w-lg flex-col overflow-hidden rounded-t-[1.35rem] border border-slate-200 bg-white shadow-2xl outline-none ring-1 ring-slate-200/80 sm:max-w-xl sm:rounded-2xl"
+        @keydown.escape.prevent="closeGuide"
+      >
+        <header class="shrink-0 border-b border-slate-100 bg-gradient-to-r from-sky-100/90 to-slate-50 px-4 py-4 sm:px-6 sm:py-5">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p v-if="phase === 'tour'" class="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                Paso {{ tourIndex + 1 }} / {{ tourSteps.length }}
+              </p>
+              <h2 :id="headingId" class="font-display text-lg font-semibold tracking-tight text-slate-900 sm:text-xl">
+                {{ phase === 'intro' ? 'Bienvenido a Museo Fragmentos' : tourSteps[tourIndex]?.title }}
+              </h2>
             </div>
-            <div>
-              <h2 class="text-2xl font-bold">¡Bienvenido a Museo Fragmentos!</h2>
-              <p class="text-white/80">Tu guía personal te dará un recorrido</p>
+            <button
+              type="button"
+              class="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-white/80 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-wine"
+              aria-label="Cerrar guía"
+              @click="closeGuide"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Intro -->
+        <div v-if="phase === 'intro'" class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+          <div class="flex flex-col items-center px-4 py-6 sm:px-8">
+            <div class="relative mb-4">
+              <div
+                class="flex h-[4.75rem] w-[4.75rem] items-center justify-center rounded-full bg-gradient-to-br from-sky-100 to-slate-100 ring-2 ring-wine/25"
+              >
+                <svg class="h-11 w-11 text-wine" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <span
+                class="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-emerald-100 text-emerald-700"
+                aria-hidden="true"
+              >
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p class="text-center text-sm text-slate-600 sm:text-base">Te explico en un minuto cómo moverte por el museo demo.</p>
+          </div>
+
+          <ul class="space-y-2 border-t border-slate-100 px-4 py-4 sm:px-8">
+            <li
+              v-for="(step, index) in introBullets"
+              :key="index"
+              class="flex gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-2.5 text-sm text-slate-700"
+            >
+              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-wine text-xs font-bold text-white">
+                {{ index + 1 }}
+              </span>
+              <span class="min-w-0 pt-0.5 leading-snug">{{ step }}</span>
+            </li>
+          </ul>
+
+          <div class="mt-auto flex flex-col gap-2 border-t border-slate-100 bg-slate-50/50 px-4 py-4 sm:flex-row sm:px-8">
+            <button
+              type="button"
+              class="order-2 w-full rounded-xl border border-slate-200 bg-white py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-wine/40 hover:text-wine sm:order-1 sm:flex-1"
+              @click="skipAndClose"
+            >
+              Explorar solo
+            </button>
+            <button
+              type="button"
+              class="order-1 w-full rounded-xl bg-wine py-3 text-sm font-semibold text-white shadow-md transition hover:bg-wine-dark sm:order-2 sm:flex-1"
+              @click="startTour"
+            >
+              Empezar recorrido
+            </button>
+          </div>
+        </div>
+
+        <!-- Tour por pasos -->
+        <div v-else class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+          <div class="px-4 py-5 sm:px-8">
+            <p class="text-sm leading-relaxed text-slate-600 sm:text-[0.95rem]">
+              {{ tourSteps[tourIndex]?.body }}
+            </p>
+            <div v-if="tourSteps[tourIndex]?.actionLabel" class="mt-4">
+              <button
+                v-if="tourSteps[tourIndex]?.action === 'scroll'"
+                type="button"
+                class="w-full rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-semibold text-wine shadow-sm transition hover:bg-sky-50 sm:w-auto sm:px-6"
+                @click="runStepAction"
+              >
+                {{ tourSteps[tourIndex].actionLabel }}
+              </button>
+              <a
+                v-else-if="tourSteps[tourIndex]?.href"
+                :href="tourSteps[tourIndex].href"
+                class="inline-flex w-full items-center justify-center rounded-xl bg-wine px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-wine-dark sm:w-auto"
+                @click="afterNavLink"
+              >
+                {{ tourSteps[tourIndex].actionLabel }}
+              </a>
             </div>
           </div>
-          <button @click="closeWelcome" class="text-white/80 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <!-- Contenido del Tour -->
-      <div class="p-8 bg-white">
-        <!-- Avatar del Anfitrión -->
-        <div class="text-center mb-8">
-          <div class="inline-block relative">
-            <div class="w-24 h-24 bg-gradient-to-br from-wine/10 to-accent rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-12 h-12 text-wine" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-accent rounded-full border-4 border-white flex items-center justify-center">
-              <svg class="w-4 h-4 text-wine" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
+          <div class="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50/60 px-4 py-4 sm:px-8">
+            <button
+              type="button"
+              class="text-sm font-medium text-slate-500 hover:text-wine"
+              @click="endTourEarly"
+            >
+              Salir
+            </button>
+            <div class="flex flex-1 justify-end gap-2 sm:flex-initial">
+              <button
+                v-if="tourIndex > 0"
+                type="button"
+                class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-300"
+                @click="tourIndex--"
+              >
+                Atrás
+              </button>
+              <button
+                type="button"
+                class="rounded-xl bg-wine px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-wine-dark"
+                @click="nextTourStep"
+              >
+                {{ tourIndex === tourSteps.length - 1 ? 'Listo' : 'Siguiente' }}
+              </button>
             </div>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">Hola, soy tu guía</h3>
-          <p class="text-gray-600">Estoy aquí para ayudarte a descubrir nuestro museo digital</p>
-        </div>
-
-        <!-- Pasos del Tour -->
-        <div class="space-y-6 mb-8">
-          <div v-for="(step, index) in tourSteps" :key="index" class="flex items-start space-x-4 p-4 rounded-lg hover:bg-accent-light transition-colors">
-            <div class="flex-shrink-0 w-10 h-10 bg-wine text-white rounded-full flex items-center justify-center font-bold">
-              {{ index + 1 }}
-            </div>
-            <div class="flex-1">
-              <h4 class="font-semibold text-gray-900 mb-1">{{ step.title }}</h4>
-              <p class="text-gray-600 text-sm">{{ step.description }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Acciones -->
-        <div class="flex flex-col sm:flex-row gap-4">
-          <button @click="startTour" class="flex-1 bg-wine hover:bg-wine-dark text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2">
-            <span>Empezar Tour Guiado</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
-          <button @click="skipTour" class="flex-1 border-2 border-gray-300 hover:border-wine text-gray-700 hover:text-wine px-6 py-3 rounded-lg font-semibold transition-colors">
-            Explorar por mi cuenta
-          </button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Tour Guiado Activo -->
-  <div v-if="tourActive" class="fixed inset-0 z-50 pointer-events-none">
-    <div v-for="(highlight, index) in highlights" :key="index" 
-         v-show="currentStep === index"
-         class="absolute pointer-events-auto"
-         :style="{ top: highlight.top, left: highlight.left, width: highlight.width, height: highlight.height }">
-      <div class="absolute inset-0 bg-wine/20 border-2 border-wine rounded-lg animate-pulse"></div>
-      <div class="absolute -bottom-20 left-0 bg-white rounded-lg shadow-xl p-4 max-w-xs border border-gray-200">
-        <p class="text-sm text-gray-700 font-medium">{{ highlight.message }}</p>
-        <div class="flex gap-2 mt-3">
-          <button @click="nextStep" class="px-4 py-2 bg-wine text-white rounded text-sm font-medium hover:bg-wine-dark">
-            Siguiente
-          </button>
-          <button @click="endTour" class="px-4 py-2 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:border-wine hover:text-wine">
-            Saltar Tour
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  </teleport>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
-const showWelcome = ref(false);
-const tourActive = ref(false);
-const currentStep = ref(0);
+const GUIDE_EVENT = 'museo-fragmentos:open-guide';
+
+const isOpen = ref(false);
+const phase = ref('intro');
+const tourIndex = ref(0);
+
+const headingId = 'welcome-guide-heading';
+
+const introBullets = [
+  'Arriba tienes acceso a Galería, Salas, Artistas y la búsqueda (ícono de lupa).',
+  'En la portada verás piezas recientes y un carril horizontal que puedes deslizar en el móvil.',
+  'En cada obra puedes abrir la ficha; en la demo, «Constelación sobre panel» incluye vista 3D de prueba.',
+];
 
 const tourSteps = [
   {
-    title: 'Explora la Galería',
-    description: 'Descubre miles de obras de arte sin necesidad de registro. Todo es completamente gratis.'
+    title: 'Menú y búsqueda',
+    body: 'Usa la barra superior para saltar entre secciones. La lupa abre el buscador en cualquier pantalla.',
+    actionLabel: '',
   },
   {
-    title: 'Visualiza en 3D y AR',
-    description: 'Cada obra puede verse en alta resolución, modelo 3D interactivo o en Realidad Aumentada.'
+    title: 'Bloque de características',
+    body: 'Más abajo en la página, el apartado «Fragmentos útiles» resume cómo está pensada la demo.',
+    actionLabel: 'Ir a características',
+    action: 'scroll',
+    scrollTarget: '#features',
   },
   {
-    title: 'Visita Salas Virtuales',
-    description: 'Recorre exposiciones temáticas organizadas como en un museo físico.'
+    title: 'Explorar obras',
+    body: 'En la Galería verás filtros y fichas con accesos 2D / 3D / AR según disponibilidad de cada obra.',
+    actionLabel: 'Abrir Galería',
+    href: '/galeria',
   },
   {
-    title: 'Conoce a los Artistas',
-    description: 'Explora perfiles de artistas y descubre sus colecciones completas.'
+    title: 'Listo',
+    body: 'Puedes volver a esta guía en cualquier momento tocando el botón flotante del anfitrión (esquina inferior derecha).',
+    actionLabel: '',
+  },
+];
+
+const openGuide = (mode = 'intro') => {
+  isOpen.value = true;
+  phase.value = mode;
+  if (mode === 'tour') tourIndex.value = 0;
+};
+
+const closeGuide = () => {
+  isOpen.value = false;
+};
+
+const persistSeen = () => {
+  try {
+    localStorage.setItem('magical-moon-welcome-seen', 'true');
+  } catch {
+    /* private mode */
   }
-];
+};
 
-const highlights = [
-  { top: '20%', left: '10%', width: '200px', height: '60px', message: 'Aquí está el menú principal. Puedes navegar por todas las secciones.' },
-  { top: '30%', left: '50%', width: '300px', height: '200px', message: 'Estas son las obras destacadas. Haz clic para ver más detalles.' },
-];
-
-const closeWelcome = () => {
-  showWelcome.value = false;
-  localStorage.setItem('magical-moon-welcome-seen', 'true');
+const skipAndClose = () => {
+  persistSeen();
+  closeGuide();
 };
 
 const startTour = () => {
-  showWelcome.value = false;
-  tourActive.value = true;
-  currentStep.value = 0;
+  persistSeen();
+  phase.value = 'tour';
+  tourIndex.value = 0;
 };
 
-const nextStep = () => {
-  if (currentStep.value < highlights.length - 1) {
-    currentStep.value++;
-  } else {
-    endTour();
+const nextTourStep = () => {
+  if (tourIndex.value < tourSteps.length - 1) {
+    tourIndex.value++;
+    return;
   }
+  try {
+    localStorage.setItem('magical-moon-tour-completed', 'true');
+  } catch {
+    /* ignore */
+  }
+  closeGuide();
 };
 
-const skipTour = () => {
-  showWelcome.value = false;
-  tourActive.value = false;
-  localStorage.setItem('magical-moon-welcome-seen', 'true');
-  localStorage.setItem('magical-moon-tour-skipped', 'true');
+const endTourEarly = () => {
+  persistSeen();
+  try {
+    localStorage.setItem('magical-moon-tour-skipped', 'true');
+  } catch {
+    /* ignore */
+  }
+  closeGuide();
 };
 
-const endTour = () => {
-  tourActive.value = false;
-  localStorage.setItem('magical-moon-tour-completed', 'true');
+const afterNavLink = () => {
+  persistSeen();
+  closeGuide();
 };
+
+const runStepAction = () => {
+  const step = tourSteps[tourIndex.value];
+  if (step.action !== 'scroll' || !step.scrollTarget) return;
+  closeGuide();
+  requestAnimationFrame(() => {
+    document.querySelector(step.scrollTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+};
+
+const onBackdropClose = () => {
+  if (phase.value === 'intro') skipAndClose();
+  else endTourEarly();
+};
+
+const onExternalOpen = () => {
+  openGuide('intro');
+};
+
+let autoShowTimer = null;
 
 onMounted(() => {
-  // Mostrar bienvenida solo la primera vez
-  const welcomeSeen = localStorage.getItem('magical-moon-welcome-seen');
+  if (typeof window === 'undefined') return;
+  window.addEventListener(GUIDE_EVENT, onExternalOpen);
+
+  let welcomeSeen = false;
+  try {
+    welcomeSeen = !!localStorage.getItem('magical-moon-welcome-seen');
+  } catch {
+    welcomeSeen = false;
+  }
+
   if (!welcomeSeen) {
-    setTimeout(() => {
-      showWelcome.value = true;
-    }, 500);
+    autoShowTimer = window.setTimeout(() => openGuide('intro'), 600);
+  }
+});
+
+onUnmounted(() => {
+  if (autoShowTimer != null) {
+    clearTimeout(autoShowTimer);
+    autoShowTimer = null;
+  }
+  if (typeof window !== 'undefined') {
+    window.removeEventListener(GUIDE_EVENT, onExternalOpen);
   }
 });
 </script>
 
 <style scoped>
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+.guide-backdrop {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 </style>
-
